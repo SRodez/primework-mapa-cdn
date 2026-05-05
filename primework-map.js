@@ -97,6 +97,9 @@
     window.pwMap = map; // debug exposure
     window.pwData = DATA;
 
+    const singleMode = mapEl0 && mapEl0.dataset.pwSingle === 'true';
+    if (singleMode) console.log('[pw-map] single-pin mode (microsite)');
+
     ready.then(function () {
       return loadPinIcons(map);
     }).then(function () {
@@ -105,9 +108,9 @@
       console.log('[pw-map] layers created:', layerIds);
       console.log('[pw-map] features in source:', FEATURES.length);
       bindMapEvents(map);
-      bindDropdownLinks(map, DATA);
-      fitToFeatures(map, FEATURES);
-      console.log('[pw-map] init complete. Try: pwMap.queryRenderedFeatures({layers:["pw-pins-body"]}).length');
+      if (!singleMode) bindDropdownLinks(map, DATA);
+      fitToFeatures(map, FEATURES, singleMode);
+      console.log('[pw-map] init complete.');
     }).catch(function (e) { console.error('[pw-map] init error:', e); });
 
     function setDim(value) {
@@ -224,8 +227,18 @@
       console.log('[pw-map] bound ' + bound + ' dropdown links to ' + DATA.length + ' pins (with popup-on-hover)');
     }
 
-    function fitToFeatures(map, features) {
+    function fitToFeatures(map, features, single) {
       if (!features.length) return;
+      if (single || features.length === 1) {
+        const c = features[0].geometry.coordinates;
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            map.resize();
+            map.jumpTo({ center: c, zoom: 16 });
+          });
+        });
+        return;
+      }
       const bounds = new mapboxgl.LngLatBounds();
       features.forEach(function (f) { bounds.extend(f.geometry.coordinates); });
       requestAnimationFrame(function () {
