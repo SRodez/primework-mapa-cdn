@@ -1,0 +1,36 @@
+/* PRIMEWORK — Mapa Mapbox styles · 2026-04-30 */
+.pw-map-section { background: #fff; padding: 40px 0; }
+.pw-map-layout { display: flex; max-width: 1480px; margin: 0 auto; height: 640px; border: 1px solid #e6e6e6; }
+#pw-map-sidebar { width: 360px; flex-shrink: 0; overflow-y: auto; border-right: 1px solid #e6e6e6; padding: 24px 22px; background: #fff; }
+#pw-map-sidebar::-webkit-scrollbar { width: 4px; }
+#pw-map-sidebar::-webkit-scrollbar-thumb { background: #e6e6e6; }
+#pw-map { flex: 1; min-width: 0; height: 100%; }
+
+.pw-prop-list { list-style: none; margin: 0; padding: 0; }
+.pw-prop-li { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #e6e6e6; cursor: pointer; transition: padding-left .35s cubic-bezier(.2,.8,.2,1); }
+.pw-prop-li:hover, .pw-prop-li.is-active { padding-left: 6px; }
+.pw-prop-num { font-family: 'Frank Ruhl Libre', Georgia, serif; font-size: 13px; color: #999; flex-shrink: 0; padding-top: 2px; min-width: 22px; transition: color .25s; }
+.pw-prop-li:hover .pw-prop-num, .pw-prop-li.is-active .pw-prop-num { color: #1d0a88; }
+.pw-prop-li.is-unavailable .pw-prop-num,
+.pw-prop-li.is-unavailable:hover .pw-prop-num { color: #1a1a1a; }
+.pw-prop-info { flex: 1; min-width: 0; }
+.pw-prop-name { font-family: Montserrat, sans-serif; font-size: 13px; font-weight: 500; letter-spacing: .3px; margin-bottom: 4px; line-height: 1.35; color: #1a1a1a; }
+.pw-prop-li.is-unavailable .pw-prop-name { color: #999; font-weight: 400; }
+.pw-prop-addr { font-family: Montserrat, sans-serif; font-size: 11px; color: #999; letter-spacing: .5px; }
+.pw-prop-badge { display: inline-block; font-family: Montserrat, sans-serif; font-size: 9px; letter-spacing: 1.5px; padding: 2px 6px; background: #f0ebe3; color: #888; margin-left: 8px; vertical-align: middle; text-transform: uppercase; }
+
+/* Hidden CMS data wrapper */
+#pw-cms-data { display: none !important; }
+
+/* Mapbox popup overrides */
+.mapboxgl-popup-content { font-family: Montserrat, sans-serif; padding: 16px 18px; border-radius: 0; box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.mapboxgl-popup-content .pw-pop-name { font-size: 13px; font-weight: 500; letter-spacing: .3px; margin-bottom: 4px; color: #1a1a1a; }
+.mapboxgl-popup-content .pw-pop-addr { font-family: Montserrat, sans-serif; font-size: 11px; color: #999; letter-spacing: .5px; }
+.mapboxgl-popup-content .pw-pop-status { display: inline-block; font-family: Montserrat, sans-serif; font-size: 9px; letter-spacing: 1.5px; padding: 2px 6px; margin-top: 8px; background: #1d0a88; color: #fff; text-transform: uppercase; }
+.mapboxgl-popup-content .pw-pop-status.un { background: #1a1a1a; }
+
+@media screen and (max-width: 991px) {
+  .pw-map-layout { flex-direction: column; height: auto; }
+  #pw-map-sidebar { width: 100%; max-height: 300px; border-right: 0; border-bottom: 1px solid #e6e6e6; }
+  #pw-map { height: 480px; }
+}
