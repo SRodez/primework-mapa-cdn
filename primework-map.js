@@ -58,15 +58,19 @@
     });
 
     mapboxgl.accessToken = TOKEN;
+    const mapEl0 = document.getElementById(MAP_ID);
+    const enableScrollZoom = mapEl0 && mapEl0.dataset.pwScrollZoom === 'true';
     const map = new mapboxgl.Map({
       container: MAP_ID,
       style: STYLE,
       center: [-3.6885, 40.43],
       zoom: 13,
-      attributionControl: false
+      attributionControl: false,
+      scrollZoom: enableScrollZoom
     });
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-left');
     map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
+    if (!enableScrollZoom) console.log('[pw-map] scroll-zoom disabled (set data-pw-scroll-zoom="true" on #pw-map to enable)');
 
     if (window.ResizeObserver) {
       new ResizeObserver(function () { map.resize(); }).observe(document.getElementById(MAP_ID));
