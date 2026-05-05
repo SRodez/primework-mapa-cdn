@@ -193,8 +193,8 @@
     }
 
     function bindDropdownLinks(map, DATA) {
-      const slugToNum = {};
-      DATA.forEach(function (p, i) { slugToNum[p.slug] = i + 1; });
+      const slugMap = {};
+      DATA.forEach(function (p, i) { slugMap[p.slug] = { num: i + 1, prop: p }; });
 
       const links = document.querySelectorAll(PROP_LINK_SEL);
       let bound = 0;
@@ -202,19 +202,26 @@
         const href = link.getAttribute('href') || '';
         const m = href.match(/\/propiedades\/([^\/?#]+)/);
         if (!m) return;
-        const slug = m[1];
-        const num = slugToNum[slug];
-        if (!num) return;
+        const entry = slugMap[m[1]];
+        if (!entry) return;
+        const num = entry.num;
+        const p = entry.prop;
 
         link.classList.add('pw-prop-link');
         link.dataset.pwNum = num;
-        link.dataset.pwSlug = slug;
+        link.dataset.pwSlug = m[1];
 
-        link.addEventListener('mouseenter', function () { setHover(num, true); });
-        link.addEventListener('mouseleave', function () { setHover(num, false); });
+        link.addEventListener('mouseenter', function () {
+          setHover(num, true);
+          showPopup([p.lng, p.lat], { name: p.name, direccion: p.direccion, available: p.available });
+        });
+        link.addEventListener('mouseleave', function () {
+          setHover(num, false);
+          if (popup) { popup.remove(); popup = null; }
+        });
         bound++;
       });
-      console.log('[pw-map] bound ' + bound + ' dropdown links to ' + DATA.length + ' pins');
+      console.log('[pw-map] bound ' + bound + ' dropdown links to ' + DATA.length + ' pins (with popup-on-hover)');
     }
 
     function fitToFeatures(map, features) {
