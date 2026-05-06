@@ -130,8 +130,9 @@
       bindMapEvents(map);
       if (!singleMode) bindDropdownLinks(map, DATA);
       fitToFeatures(map, FEATURES, singleMode);
-      // Auto-open popup in single-pin mode (microsite + contacto fixed-coords)
-      if (singleMode && DATA.length) {
+      // Auto-open popup in single-pin mode (opt-out via data-pw-no-auto-popup="true")
+      var noAutoPopup = mapEl0 && mapEl0.dataset.pwNoAutoPopup === 'true';
+      if (singleMode && DATA.length && !noAutoPopup) {
         setTimeout(function () {
           showPopup([DATA[0].lng, DATA[0].lat], {
             name: DATA[0].name,
