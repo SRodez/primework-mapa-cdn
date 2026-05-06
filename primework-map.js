@@ -26,22 +26,42 @@
       return;
     }
 
-    const items = Array.from(document.querySelectorAll(DATA_SEL));
-    const DATA = items.map(function (el) {
-      return {
-        id: el.dataset.id || '',
-        name: (el.dataset.name || '').trim(),
-        slug: el.dataset.slug || '',
-        direccion: (el.dataset.direccion || el.dataset.name || '').trim(),
-        lat: parseFloat(el.dataset.lat),
-        lng: parseFloat(el.dataset.lng),
-        imagen: el.dataset.imagen || '',
-        available: (el.dataset.disponibilidad || '').trim() === AVAILABLE_OPTION_NAME
-      };
-    }).filter(function (p) { return !isNaN(p.lat) && !isNaN(p.lng); });
+    // Source A: fixed coords on #pw-map (data-pw-lat / data-pw-lng) — for single-pin pages without CMS (e.g. Contacto)
+    const mapEl = document.getElementById(MAP_ID);
+    const fixedLat = parseFloat(mapEl.dataset.pwLat);
+    const fixedLng = parseFloat(mapEl.dataset.pwLng);
+    let DATA;
+    if (!isNaN(fixedLat) && !isNaN(fixedLng)) {
+      DATA = [{
+        id: '',
+        name: (mapEl.dataset.pwName || 'Primework').trim(),
+        slug: '',
+        direccion: (mapEl.dataset.pwDireccion || mapEl.dataset.pwName || '').trim(),
+        lat: fixedLat,
+        lng: fixedLng,
+        imagen: '',
+        available: true
+      }];
+      console.log('[pw-map] fixed-coords mode:', DATA[0].name, fixedLat, fixedLng);
+    } else {
+      // Source B: CMS items inside #pw-cms-data .pw-prop
+      const items = Array.from(document.querySelectorAll(DATA_SEL));
+      DATA = items.map(function (el) {
+        return {
+          id: el.dataset.id || '',
+          name: (el.dataset.name || '').trim(),
+          slug: el.dataset.slug || '',
+          direccion: (el.dataset.direccion || el.dataset.name || '').trim(),
+          lat: parseFloat(el.dataset.lat),
+          lng: parseFloat(el.dataset.lng),
+          imagen: el.dataset.imagen || '',
+          available: (el.dataset.disponibilidad || '').trim() === AVAILABLE_OPTION_NAME
+        };
+      }).filter(function (p) { return !isNaN(p.lat) && !isNaN(p.lng); });
+    }
 
     if (!DATA.length) {
-      console.warn('[pw-map] no items found in #pw-cms-data');
+      console.warn('[pw-map] no data — set data-pw-lat/data-pw-lng on #pw-map OR populate #pw-cms-data .pw-prop');
       return;
     }
 
@@ -58,7 +78,7 @@
     });
 
     mapboxgl.accessToken = TOKEN;
-    const mapEl0 = document.getElementById(MAP_ID);
+    const mapEl0 = mapEl;
     const enableScrollZoom = mapEl0 && mapEl0.dataset.pwScrollZoom === 'true';
     const map = new mapboxgl.Map({
       container: MAP_ID,
@@ -110,6 +130,16 @@
       bindMapEvents(map);
       if (!singleMode) bindDropdownLinks(map, DATA);
       fitToFeatures(map, FEATURES, singleMode);
+      // Auto-open popup in single-pin mode (microsite + contacto fixed-coords)
+      if (singleMode && DATA.length) {
+        setTimeout(function () {
+          showPopup([DATA[0].lng, DATA[0].lat], {
+            name: DATA[0].name,
+            direccion: DATA[0].direccion,
+            available: DATA[0].available
+          });
+        }, 350);
+      }
       console.log('[pw-map] init complete.');
     }).catch(function (e) { console.error('[pw-map] init error:', e); });
 
