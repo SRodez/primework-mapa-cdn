@@ -325,7 +325,7 @@
     });
     map.addLayer({
       id: 'pw-pins-dot', type: 'symbol', source: 'pw-properties',
-      layout: { 'icon-image': 'pw-pin-dot', 'icon-anchor': 'bottom', 'icon-allow-overlap': true, 'icon-ignore-placement': true, 'icon-size': 0.45, 'icon-offset': [0, -28] },
+      layout: { 'icon-image': 'pw-pin-dot', 'icon-anchor': 'bottom', 'icon-allow-overlap': true, 'icon-ignore-placement': true, 'icon-size': 0.45, 'icon-offset': [0, -22] },
       paint: { 'icon-color': '#ffffff', 'icon-opacity': 1 }
     });
   }
