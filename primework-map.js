@@ -6,7 +6,7 @@
 
   const MAP_ID = 'pw-map';
   const DATA_SEL = '#pw-cms-data .pw-prop';
-  const PROP_LINK_SEL = 'a[href^="/propiedades/"]';
+  const PROP_LINK_SEL = 'a[href*="/propiedades/"]';
   const LAYER_PINS = ['pw-pins-bg', 'pw-pins-body', 'pw-pins-dot'];
 
   const TOKEN = window.PW_MAPBOX_TOKEN || '';
